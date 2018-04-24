@@ -39,6 +39,7 @@ return array (
         ),
       ),
       'default' => '',
+      'disable' => '1',
     ),
     1 => 
     array (
@@ -72,6 +73,7 @@ return array (
       'default' => '',
       'searchable' => '1',
       'filterable' => '1',
+      'disable' => '1',
     ),
     2 => 
     array (
@@ -99,6 +101,7 @@ return array (
       ),
       'default' => '',
       'searchable' => '1',
+      'disable' => '1',
     ),
     3 => 
     array (
@@ -126,6 +129,7 @@ return array (
         'format' => 'hide',
       ),
       'default' => '',
+      'disable' => '1',
     ),
     4 => 
     array (
@@ -152,6 +156,7 @@ return array (
         'format' => 'none',
       ),
       'default' => '*',
+      'disable' => '1',
     ),
     5 => 
     array (
@@ -193,6 +198,7 @@ return array (
         ),
       ),
       'default' => '',
+      'disable' => '1',
     ),
     6 => 
     array (
@@ -219,6 +225,7 @@ return array (
         'format' => 'none',
       ),
       'default' => '',
+      'disable' => '1',
     ),
     7 => 
     array (
@@ -245,6 +252,7 @@ return array (
         'format' => 'none',
       ),
       'default' => '',
+      'disable' => '1',
     ),
     8 => 
     array (
@@ -263,6 +271,7 @@ return array (
         'format' => 'none',
       ),
       'default' => '',
+      'disable' => '1',
     ),
     9 => 
     array (
@@ -283,6 +292,7 @@ return array (
       'default' => '1',
       'filterable' => '1',
       'sortable' => '1',
+      'disable' => '1',
     ),
     10 => 
     array (
@@ -304,6 +314,7 @@ return array (
       ),
       'default' => 'NOW()',
       'sortable' => '1',
+      'disable' => '1',
     ),
     11 => 
     array (
@@ -325,6 +336,7 @@ return array (
       ),
       'default' => 'NOW()',
       'sortable' => '1',
+      'disable' => '1',
     ),
   ),
   'relations' => 

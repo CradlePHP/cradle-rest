@@ -10,6 +10,7 @@ return array (
   array (
     0 => 
     array (
+      'disable' => '1',
       'label' => 'Token',
       'name' => 'token',
       'field' => 
@@ -37,6 +38,7 @@ return array (
     ),
     1 => 
     array (
+      'disable' => '1',
       'label' => 'Secret',
       'name' => 'secret',
       'field' => 
@@ -64,6 +66,7 @@ return array (
     ),
     2 => 
     array (
+      'disable' => '1',
       'label' => 'Status',
       'name' => 'status',
       'field' => 
@@ -92,6 +95,7 @@ return array (
     ),
     3 => 
     array (
+      'disable' => '1',
       'label' => 'Type',
       'name' => 'type',
       'field' => 
@@ -112,6 +116,7 @@ return array (
     ),
     4 => 
     array (
+      'disable' => '1',
       'label' => 'Active',
       'name' => 'active',
       'field' => 
@@ -132,6 +137,7 @@ return array (
     ),
     5 => 
     array (
+      'disable' => '1',
       'label' => 'Created',
       'name' => 'created',
       'field' => 
@@ -153,6 +159,7 @@ return array (
     ),
     6 => 
     array (
+      'disable' => '1',
       'label' => 'Updated',
       'name' => 'updated',
       'field' => 
