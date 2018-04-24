@@ -1,137 +1,136 @@
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-            <a href="/admin">
-                <i class="fas fa-home"></i> Admin
-            </a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            <i class="fas fa-{{schema.icon}}"></i> {{schema.plural}}
-        </li>
-    </ol>
-</nav>
-
-<div class="main-padding">
-    {{#when filter schema.active '===' '0'}}
-        <h3 class="main-title">
-            {{#if relation.suggestion}}
-                <i class="{{relation.schema.icon}}"></i>
-                {{relation.suggestion}}
-                <i class="fas fa-arrow-right"></i>
-            {{/if}}
-            <i class="fa fa-{{schema.icon}}"></i>
-            {{number total}} Inactive {{schema.plural}}
-            {{#if q.0}}
-                matching {{q.0}}
-            {{/if}}
-        </h3>
-    {{else}}
-        <h3 class="main-title">
-            {{#if relation.suggestion}}
-                <i class="{{relation.schema.icon}}"></i>
-                {{relation.suggestion}}
-                <i class="fas fa-arrow-right"></i>
-            {{/if}}
-            <i class="fa fa-{{schema.icon}}"></i>
-            {{number total}} {{schema.plural}}
-            {{#if q.0}}
-                matching {{q.0}}
-            {{/if}}
-        </h3>
-    {{/when}}
-
-    {{#if rows.length}}
-        <div class="box search-filters">
-            <div class="box-head box-default">
-                <h3 class="box-title">Filters</h3>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/admin">
+                    <i class="fas fa-home"></i> {{_ 'Admin'}}
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                <i class="fas fa-rocket"></i> {{_ 'Applications'}}
+            </li>
+        </ol>
+    </nav>
+    
+    <div class="main-padding">
+        {{#when filter.app_active '===' '0'}}
+            <h3 class="main-title">
+                <i class="fa fa-rocket"></i>
+                {{number total}} {{_ 'Inactive Applications'}}
+                {{#if q.0}}
+                    {{_ 'matching'}} {{q.0}}
+                {{/if}}
+            </h3>
+        {{else}}
+            <h3 class="main-title">
+                <i class="fa fa-rocket"></i>
+                {{number total}} {{_ 'Applications'}}
+                {{#if q.0}}
+                    {{_ 'matching'}} {{q.0}}
+                {{/if}}
+            </h3>
+        {{/when}}
+    
+        <div class="clearfix mb-4 search-actions">
+            <div class="btn-group" role="group" aria-label="...">
+                <a class="btn btn-primary" href="?filter[app_active]=1">
+                    {{_ 'Active'}}
+                </a>
+                <a class="btn btn-danger" href="?filter[app_active]=0">
+                    {{_ 'Inactive'}}
+                </a>
             </div>
-            <form method="get">
-                <div class="box-body box-padding">
-                    <div class="form-group">
-                        <label for="q">Search</label>
-                        <input
-                            class="form-control"
-                            name="q"
-                            placeholder="Enter Search {{schema.plural}}"
-                            type="search"
-                            value="{{q}}"
-                        />
-                    </div>
-
-                    {{#if schema.filterable.length}}
-                        {{> search_form}}
-                    {{else}}
-                        {{#if filterable_relations.length}}
-                            {{> search_form}}
-                        {{/if}}
-                    {{/if}}
-                </div>
-                <div class="box-foot box-light">
-                    <div class="box-left">
-                        <button class="btn btn-danger" type="reset">Reset</button>
-                    </div>
-                    <div class="box-right">
-                        <button class="btn btn-primary">Search</button>
-                    </div>
-                </div>
-            </form>
+    
+            <div class="float-right">
+                <a class="btn btn-success" href="/admin/app/create">
+                    <i class="fas fa-plus"></i> {{_ 'Create Application'}}
+                </a>
+            </div>
         </div>
-
+    
         <form method="post">
-            {{> search_actions}}
-
             <div class="table-overflow">
-                <table class="table table-responsive-sm table-striped table-data">
+            {{#if rows}}
+                <!-- START: TABLE -->
+                <table class="table table-striped">
                     <thead>
-                        {{> search_head}}
+                        <tr>
+                            <th>{{_ 'Actions'}}</th>
+                            <th>{{_ 'Slug'}}</th>                            
+                            <th>{{_ 'Name'}}</th>
+                            <th>{{_ 'Domain'}}</th>
+                            <th>{{_ 'Website'}}</th>
+                            <th>{{_ 'Token'}}</th>
+                            <th>{{_ 'Secret'}}</th>                            
+                            <th>{{_ 'Created'}}</th>
+                            <th>{{_ 'Updated'}}</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {{#each rows}}
-                            <tr data-id="{{scope this ../schema.primary}}">
-                                <td class="table-bulk-checkbox">
-                                    <label class="checkbox checkbox-1">
-                                        <input type="checkbox" name="{{../schema.primary}}[]" value="{{scope this ../schema.primary}}" />
-                                        <span></span>
-                                    </label>
+                            <tr data-id="{{app_id}}">
+                                <td>
+                                    {{#if ../filter.app_active}}
+                                        <a class="text-purple" title="Copy" href="/admin/app/create/?copy={{app_id}}">
+                                        <i class="fas fa-copy"></i></a>
+                                        &nbsp;
+                                        <a class="text-orange" title="Refresh" href="/admin/app/refresh/{{app_id}}">
+                                        <i class="fas fa-sync"></i></a>
+                                        &nbsp;
+                                        <a class="text-info" title="Edit" href="/admin/app/update/{{app_id}}">
+                                        <i class="fas fa-edit"></i></a>
+                                        &nbsp;
+                                        <a class="text-danger" title="Remove" href="/admin/app/remove/{{app_id}}"
+                                        class="text-danger remove"><i class="fas fa-times"></i></a>
+                                    {{else}}
+                                        <a title="Restore" href="/admin/app/restore/{{app_id}}" class="text-success restore">
+                                        <i class="fas fa-external-link-alt"></i></a>
+                                    {{/if}}
                                 </td>
-                                <td class="table-actions">
-                                    {{> search_row_actions}}
+                                <td>
+                                    <a href="/admin/app/update/{{app_id}}">{{app_slug}}</a>
                                 </td>
-                                <td>{{scope this ../schema.primary}}</td>
-                                {{#each ../schema.relations}}
-                                    {{#when many '==' 1}}
-                                        <td>
-                                            <a
-                                                href="/admin/system/model/{{name}}/update/{{scope ../this primary}}"
-                                                target="_blank"
-                                            >
-                                                {{suggest this ../this}}
-                                            </a>
-                                        </td>
-                                    {{/when}}
-                                {{/each}}
-                                {{> search_row_format}}
+                                <td>
+                                    <a href="/admin/app/update/{{app_id}}">{{app_name}}</a>
+                                </td>
+                                <td>
+                                    {{app_domain}}
+                                </td>
+                                <td>
+                                    {{#if app_website}}
+                                    <a href="{{app_website}}" target="_blank">{{app_website}}</a>
+                                    {{else}}
+                                    -
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{app_token}}
+                                </td>
+                                <td>
+                                    {{app_secret}}
+                                </td>
+                                <td>
+                                    {{date app_created 'Y-m-d H:i:s'}}
+                                </td>
+                                <td>
+                                    {{date app_updated 'Y-m-d H:i:s'}}
+                                </td>
                             </tr>
                         {{/each}}
                     </tbody>
                 </table>
-            </div>
+                <!-- END: TABLE -->
+            {{else}}
+                <!-- START: NO RESULTS -->
+                <div class="alert alert-info no-results">
+                    <center>{{_ 'No Results Found'}}.</center>
+                </div>
+                <!-- END: NO RESULTS -->
+            {{/if}}
+            <ul class="pagination">
+                {{#pager total range}}
+                <li class="page-item {{#if active}}active{{/if}}"><a class="page-link" href="?{{href}}">{{page}}</a></li>
+                {{/pager}}
+            </ul>
         </form>
-
-        <ul class="pagination">
-            {{#pager total range}}
-                <li class="page-item{{#if active}} active{{/if}}">
-                    <a class="page-link" href="?{{href}}">{{page}}</a>
-                </li>
-            {{/pager}}
-        </ul>
-    {{else}}
-        {{> search_actions}}
-
-        <!-- START: NO RESULTS -->
-        <div class="alert alert-info no-results">
-            <center>No Results Found.</center>
-        </div>
-        <!-- END: NO RESULTS -->
-    {{/if}}
-</div>
+    </div>
+    
