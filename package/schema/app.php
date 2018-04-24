@@ -286,6 +286,27 @@ return array (
     ),
     10 => 
     array (
+      'label' => 'Created',
+      'name' => 'created',
+      'field' => 
+      array (
+        'type' => 'created',
+      ),
+      'list' => 
+      array (
+        'format' => 'date',
+        'parameters' => 'Y-m-d H:i:s',
+      ),
+      'detail' => 
+      array (
+        'format' => 'date',
+        'parameters' => 'Y-m-d H:i:s',
+      ),
+      'default' => 'NOW()',
+      'sortable' => '1',
+    ),
+    11 => 
+    array (
       'label' => 'Updated',
       'name' => 'updated',
       'field' => 
