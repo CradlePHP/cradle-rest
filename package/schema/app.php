@@ -311,7 +311,7 @@ return array (
         'format' => 'hide',
       ),
       'default' => '',
-      'disable' => '1'
+      'disable' => '1',
     ),
     11 => 
     array (
@@ -363,7 +363,7 @@ return array (
     0 => 
     array (
       'many' => '1',
-      'name' => 'profile',
+      'name' => 'auth',
     ),
   ),
   'suggestion' => '{{app_name}} - {{app_slug}}',
