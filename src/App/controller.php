@@ -88,6 +88,55 @@ $this->get('/admin/app/create', function ($request, $response) {
 });
 
 /**
+ * Render App Detail Page
+ * 
+ * @param Request $request
+ * @param Response $response
+ */
+$this->get('/admin/app/detail/:app_id', function ($request, $response) {
+    //----------------------------//
+    // 1. Prepare Data
+
+    //----------------------------//
+    // 2. Process Request
+    $this->trigger('app-detail', $request, $response);
+
+    // get the results
+    $data['item'] = $response->getResults();
+
+    //----------------------------//
+    // 3. Interpret Results
+    if ($response->isError()) {
+        $this->package('global')->flash($response->getMessage(), 'error');
+        return $this->package('global')->redirect('/admin/app/search');
+    }
+
+    //----------------------------//
+    // 4. Render Template
+    //Render body
+    $class = 'page-app-detail';
+    $data['title'] = $this->package('global')->translate('Application Detail');
+
+    $body = $this
+        ->package('cradlephp/cradle-rest')
+        ->template('App', 'detail', $data);
+
+    //Set Content
+    $response
+        ->setPage('title', $data['title'])
+        ->setPage('class', $class)
+        ->setContent($body);
+
+    //if we only want the body
+    if ($request->getStage('render') === 'body') {
+        return;
+    }
+
+    //Render blank page
+    $this->trigger('admin-render-page', $request, $response);
+});
+
+/**
  * Render App Update Page
  * 
  * @param Request $request
@@ -257,6 +306,52 @@ $this->get('/admin/app/restore/:app_id', function ($request, $response) {
     } else {
         //add a flash
         $message = $this->package('global')->translate('Application was Restored');
+        $this->package('global')->flash($message, 'success');
+    }
+
+    $this->package('global')->redirect($redirect);
+});
+
+/**
+ * Render App Refresh Page
+ * 
+ * @param Request $request
+ * @param Response $response
+ */
+$this->get('/admin/app/refresh/:app_id', function ($request, $response) {
+    //----------------------------//
+    // 1. Prepare Data
+    // update app token
+    $request->setStage('app_token', md5(uniqid() . uniqid()));
+    // update app secret
+    $request->setStage('app_secret', md5(uniqid() . uniqid()));
+
+    //----------------------------//
+    // 2. Process Request
+    $this->trigger('app-update', $request, $response);
+
+    //----------------------------//
+    // 3. Interpret Results
+    if ($response->isError()) {
+        $this->package('global')->flash($response->getMessage(), 'error');
+        return $this->package('global')->redirect('/admin/app/search');
+    }
+
+    //redirect
+    $redirect = '/admin/app/search';
+
+    //if there is a specified redirect
+    if ($request->getStage('redirect')) {
+        //set the redirect
+        $redirect = $request->getStage('redirect');
+    }
+
+    if ($response->isError()) {
+        //add a flash
+        $this->package('global')->flash($response->getMessage(), 'error');
+    } else {
+        //add a flash
+        $message = $this->package('global')->translate('Application was Refreshed');
         $this->package('global')->flash($message, 'success');
     }
 
