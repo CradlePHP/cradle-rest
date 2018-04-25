@@ -296,6 +296,25 @@ return array (
     ),
     10 => 
     array (
+      'label' => 'Permissions',
+      'name' => 'permissions',
+      'field' => 
+      array (
+        'type' => 'rawjson',
+      ),
+      'list' => 
+      array (
+        'format' => 'hide',
+      ),
+      'detail' => 
+      array (
+        'format' => 'hide',
+      ),
+      'default' => '',
+      'disable' => '1'
+    ),
+    11 => 
+    array (
       'label' => 'Created',
       'name' => 'created',
       'field' => 
@@ -316,7 +335,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    11 => 
+    12 => 
     array (
       'label' => 'Updated',
       'name' => 'updated',
