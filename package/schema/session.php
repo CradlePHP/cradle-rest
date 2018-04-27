@@ -81,6 +81,7 @@ return array (
         'format' => 'hide',
       ),
       'default' => '',
+      'disable' => '1'
     ),
     3 => 
     array (

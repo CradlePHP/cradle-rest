@@ -12,6 +12,8 @@ require_once __DIR__ . '/src/events.php';
 require_once __DIR__ . '/src/controller.php';
 require_once __DIR__ . '/src/App/events.php';
 require_once __DIR__ . '/src/App/controller.php';
+require_once __DIR__ . '/src/Dialog/events.php';
+require_once __DIR__ . '/src/Dialog/controller.php';
 require_once __DIR__ . '/package/helpers.php';
 
 //bootstrap

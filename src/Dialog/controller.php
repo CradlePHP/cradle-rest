@@ -17,7 +17,7 @@ $this->get('/dialog/signup', function ($request, $response) {
     //redirect
     $query = http_build_query($request->get('get'));
     $redirect = urlencode('/dialog/request?' . $query);
-    $this->package('global')->redirect('/signup?redirect_uri='.$redirect);
+    $this->package('global')->redirect('/auth/signup?redirect_uri='.$redirect);
 });
 
 /**
@@ -30,7 +30,7 @@ $this->get('/dialog/login', function ($request, $response) {
     //redirect
     $query = http_build_query($request->get('get'));
     $redirect = urlencode('/dialog/request?' . $query);
-    $this->package('global')->redirect('/login?redirect_uri='.$redirect);
+    $this->package('global')->redirect('/auth/login?redirect_uri='.$redirect);
 });
 
 /**
@@ -42,7 +42,7 @@ $this->get('/dialog/login', function ($request, $response) {
 $this->get('/dialog/account', function ($request, $response) {
     //redirect
     $query = http_build_query($request->get('get'));
-    $this->package('global')->redirect('/account?'.$query);
+    $this->package('global')->redirect('/auth/account?'.$query);
 });
 
 /**
