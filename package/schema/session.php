@@ -10,7 +10,6 @@ return array (
   array (
     0 => 
     array (
-      'disable' => '1',
       'label' => 'Token',
       'name' => 'token',
       'field' => 
@@ -35,10 +34,10 @@ return array (
       ),
       'default' => '',
       'searchable' => '1',
+      'disable' => '1',
     ),
     1 => 
     array (
-      'disable' => '1',
       'label' => 'Secret',
       'name' => 'secret',
       'field' => 
@@ -63,10 +62,28 @@ return array (
       ),
       'default' => '',
       'searchable' => '1',
+      'disable' => '1',
     ),
     2 => 
     array (
-      'disable' => '1',
+      'label' => 'Permissions',
+      'name' => 'permissions',
+      'field' => 
+      array (
+        'type' => 'rawjson',
+      ),
+      'list' => 
+      array (
+        'format' => 'hide',
+      ),
+      'detail' => 
+      array (
+        'format' => 'hide',
+      ),
+      'default' => '',
+    ),
+    3 => 
+    array (
       'label' => 'Status',
       'name' => 'status',
       'field' => 
@@ -92,10 +109,10 @@ return array (
       'default' => '',
       'searchable' => '1',
       'filterable' => '1',
-    ),
-    3 => 
-    array (
       'disable' => '1',
+    ),
+    4 => 
+    array (
       'label' => 'Type',
       'name' => 'type',
       'field' => 
@@ -113,10 +130,10 @@ return array (
       'default' => '',
       'searchable' => '1',
       'filterable' => '1',
-    ),
-    4 => 
-    array (
       'disable' => '1',
+    ),
+    5 => 
+    array (
       'label' => 'Active',
       'name' => 'active',
       'field' => 
@@ -134,10 +151,10 @@ return array (
       'default' => '1',
       'filterable' => '1',
       'sortable' => '1',
-    ),
-    5 => 
-    array (
       'disable' => '1',
+    ),
+    6 => 
+    array (
       'label' => 'Created',
       'name' => 'created',
       'field' => 
@@ -156,10 +173,10 @@ return array (
       ),
       'default' => 'NOW()',
       'sortable' => '1',
-    ),
-    6 => 
-    array (
       'disable' => '1',
+    ),
+    7 => 
+    array (
       'label' => 'Updated',
       'name' => 'updated',
       'field' => 
@@ -178,6 +195,7 @@ return array (
       ),
       'default' => 'NOW()',
       'sortable' => '1',
+      'disable' => '1',
     ),
   ),
   'relations' => 
