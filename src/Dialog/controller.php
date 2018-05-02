@@ -20,7 +20,7 @@ use Cradle\Package\System\Model\Service;
 $this->get('/dialog/signup', function ($request, $response) {
     //redirect
     $query = http_build_query($request->get('get'));
-    $redirect = urlencode('/dialog/request?' . $query);
+    $redirect = urlencode('/dialog/oauth?' . $query);
     $this->package('global')->redirect('/auth/signup?redirect_uri='.$redirect);
 });
 
@@ -33,7 +33,7 @@ $this->get('/dialog/signup', function ($request, $response) {
 $this->get('/dialog/login', function ($request, $response) {
     //redirect
     $query = http_build_query($request->get('get'));
-    $redirect = urlencode('/dialog/request?' . $query);
+    $redirect = urlencode('/dialog/oauth?' . $query);
     $this->package('global')->redirect('/auth/login?redirect_uri='.$redirect);
 });
 
@@ -55,15 +55,29 @@ $this->get('/dialog/account', function ($request, $response) {
  * @param Request $request
  * @param Response $response
  */
-$this->get('/dialog/request', function ($request, $response) {
+$this->get('/dialog/oauth', function ($request, $response) {
     //----------------------------//
     // 1. Route Permissions
-    //for logged in
+    // for logged in
     $this->package('global')->requireLogin();
 
-    //validate parameters
+    // validate parameters
     if (!$request->hasStage('client_id') || !$request->hasStage('redirect_uri')) {
         $response->set('json', 'message', 'Invalid Parameters');
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    }
+
+    // default response type
+    $type = 'code';
+
+    // validate parameters
+    if ($request->hasStage('response_type')) {
+        $type = $request->getStage('response_type');
+    }
+
+    // validate type
+    if (!in_array($type, ['code', 'token'])) {
+        $response->set('json', 'message', 'Invalid Response Type');
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
@@ -197,8 +211,8 @@ $this->get('/dialog/request', function ($request, $response) {
     //----------------------------//
     // 3. Render Template
     $class = 'page-dialog-request';
-    $title = $this->package('global')->translate('Request Access');
-    $body = cradle('cradlephp/cradle-rest')->template('Dialog', 'request', $data);
+    $title = $this->package('global')->translate('Authorize Application');
+    $body = cradle('cradlephp/cradle-rest')->template('Dialog', 'oauth', $data);
 
     // set content
     $response
@@ -216,7 +230,7 @@ $this->get('/dialog/request', function ($request, $response) {
  * @param Request $request
  * @param Response $response
  */
-$this->post('/dialog/request', function ($request, $response) {
+$this->post('/dialog/oauth', function ($request, $response) {
     //----------------------------//
     // 1. Route Permissions
     //for logged in
@@ -232,6 +246,20 @@ $this->post('/dialog/request', function ($request, $response) {
 
     // validate parameters
     if (!$request->hasStage('client_id') || !$request->hasStage('redirect_uri')) {
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    }
+
+    // default response type
+    $type = 'code';
+
+    // validate parameters
+    if ($request->hasStage('response_type')) {
+        $type = $request->getStage('response_type');
+    }
+
+    // validate type
+    if (!in_array($type, ['code', 'token'])) {
+        $response->set('json', 'message', 'Invalid Response Type');
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
@@ -281,9 +309,41 @@ $this->post('/dialog/request', function ($request, $response) {
 
     // set the permissions
     $request->setStage('session_permissions', $permissions);
-    // set the access token
-    $request->setStage('session_token', md5(uniqid() . uniqid()));
 
+    // default redirect
+    $redirect = null;
+    // generate hash for token / code
+    $hash = md5(uniqid() . uniqid());;
+
+    // if request type token
+    if ($type == 'token') {
+        // set redirect url
+        $redirect = sprintf(
+            $request->getStage('redirect_uri') . '#%s',
+            $hash
+        );
+
+        // create the session token
+        $request->setStage('session_token', $hash);
+        // set session status as authorized
+        $request->setStage('session_status', 'AUTHORIZED');
+        // set session type as token
+        $request->setStage('session_type', 'token');
+    } else {
+        // set redirect url
+        $redirect = sprintf(
+            $request->getStage('redirect_uri') . '?code=%s',
+            $hash
+        );
+
+        // create the session code
+        $request->setStage('session_code', $hash);
+        // set session status as pending
+        $request->setStage('session_status', 'PENDING');
+        // set session type as code
+        $request->setStage('session_type', 'code');
+    }
+    
     //----------------------------//
     // 3. Process Request
     $this->trigger('session-create', $request, $response);
@@ -295,11 +355,8 @@ $this->post('/dialog/request', function ($request, $response) {
     }
 
     //it was good
-
     //redirect
-    $url = $request->getStage('redirect_uri');
-    $token = $response->getResults('session_token');
-    $this->getDispatcher()->redirect($url . '?access_token=' . $token);
+    $this->getDispatcher()->redirect($redirect);
 });
 
 /**

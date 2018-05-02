@@ -19,11 +19,12 @@
 <div class="main-padding">
     <div class="row mb-3">
         <div class="col-md text-right">
-            <a class="btn btn-orange" href="/admin/app/refresh/{{item.app_id}}?redirect={{redirecturl}}">
-                <i class="fa fa-sync"></i> Refresh Application
+            <a href="/admin/app/refresh/{{item.app_id}}?redirect={{redirecturl}}">
+                Refresh Application
             </a>
-            <a class="btn btn-danger" href="/admin/app/remove/{{item.app_id}}?redirect=/admin/app/search">
-                <i class="fa fa-times"></i> Remove Application
+            <span>|</span>
+            <a href="/admin/app/remove/{{item.app_id}}?redirect=/admin/app/search">
+                Remove Application
             </a>
         </div>
     </div>
@@ -67,7 +68,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Token</strong></td>
+                        <td><strong>Client ID / Token</strong></td>
                         <td>{{item.app_token}}</td>
                     </tr>
                     <tr>

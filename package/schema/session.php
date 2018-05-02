@@ -10,8 +10,8 @@ return array (
   array (
     0 => 
     array (
-      'label' => 'Token',
-      'name' => 'token',
+      'label' => 'Code',
+      'name' => 'code',
       'field' => 
       array (
         'type' => 'text',
@@ -26,12 +26,12 @@ return array (
       ),
       'default' => '',
       'searchable' => '1',
-      'disable' => '1',
+      'disable' => 1
     ),
     1 => 
     array (
-      'label' => 'Secret',
-      'name' => 'secret',
+      'label' => 'Token',
+      'name' => 'token',
       'field' => 
       array (
         'type' => 'text',
