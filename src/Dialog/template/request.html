@@ -24,17 +24,22 @@
                     <ul class="list-group">
                         {{#each permissions}}
                             <li class="list-group-item">
-                                <div class="form-check d-flex w-100 justify-content-between">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <label class="form-check-label" for="{{id}}">
+                                        <i class="{{icon}}"></i>&nbsp; {{label}} 
+                                    </label>
+                                    <small class="d-inline-block mt-1">
+                                        <a href="#" class="remove text-muted">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </small>
                                     <input 
                                         id="{{id}}"
-                                        type="checkbox" 
+                                        type="hidden" 
                                         class="form-check-input" 
                                         name="session_permissions[{{role}}][]"
                                         value="{{id}}"
-                                    >
-                                    <label class="form-check-label" for="{{id}}">
-                                        <i class="{{icon}}"></i>&nbsp; {{label}} 
-                                    </label>                                                              
+                                    >                                                          
                                 </div>
                             </li>
                         {{/each}}
@@ -55,5 +60,13 @@
 </div>
 
 <script type="text/javascript">
-    
+    $('.remove').on('click', function (e) {
+        e.preventDefault();
+
+        $(this)
+            .parent()
+            .parent()
+            .parent()
+            .remove();
+    });
 </script>

@@ -79,6 +79,8 @@ $this->get('/dialog/request', function ($request, $response) {
 
     // filter by app token
     $appRequest->setStage('filter', 'app_token', $token);
+    // should be an active app
+    $appRequest->setStage('filter', 'app_active', 1);
     // search the app by token
     $this->trigger('app-search', $appRequest, $appResponse);
 
@@ -145,7 +147,7 @@ $this->get('/dialog/request', function ($request, $response) {
 
             // detail?
             } else if($value['method'] == 'get') {
-                $permission[$key]['icon'] = 'fas fa-eye text-muted';
+                $permission[$key]['icon'] = 'fas fa-book text-muted';
 
             // delete?
             } else if($value['method'] == 'delete') {
@@ -223,15 +225,17 @@ $this->post('/dialog/request', function ($request, $response) {
     //csrf check
     $this->trigger('csrf-validate', $request, $response);
 
+    // csrf error?
     if ($response->isError()) {
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
-    //validate parameters
+    // validate parameters
     if (!$request->hasStage('client_id') || !$request->hasStage('redirect_uri')) {
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
+    // denied access?
     if ($request->getStage('action') !== 'allow') {
         //redirect
         $url = $request->getStage('redirect_uri');
@@ -240,22 +244,50 @@ $this->post('/dialog/request', function ($request, $response) {
 
     //----------------------------//
     // 2. Prepare Data
-    //get auth id and app id
-    $auth = $request->getSession('me', 'auth_id');
+    // get the app token
     $token = $request->getStage('client_id');
-    $request->setStage('app_token', $token);
-    $this->trigger('app-detail', $request, $response);
-    $app = $response->getResults('app_id');
+    // set the schema
+    $request->setStage('schema', 'app');
+    // set filter by app token
+    $request->setStage('filter', 'app_token', $token);
+    // should be an active app
+    $request->setStage('filter', 'app_active', 1);
 
-    $request->setStage('auth_id', $auth);
-    $request->setStage('app_id', $app);
+    // search the app
+    $this->trigger('app-search', $request, $response);
+    // get the results
+    $app = $response->getResults('rows', 0);
 
-    //flatten permissions
+    // app does not exists?
+    if (!$app) {
+        $response->set('json', 'message', 'Invalid Application');
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    }
+
+    // generate session token
+    $request->setStage('session_token', md5(uniqid() . uniqid()));
+    // generate session secret
+    $request->setStage('session_secret', md5(uniqid() . uniqid()));
+    // session is pending by default
+    $request->setStage('session_status', 'PENDING');
+
+    // link to the auth id
+    $request->setStage('auth_id', $request->getSession('me', 'auth_id'));
+    // link to the app id
+    $request->setStage('app_id', $app['app_id']);
+
+    // flatten permissions
     $permissions = $request->getStage('session_permissions');
 
-    if (!$permissions) {
-        $request->setStage('session_permissions', []);
+    // encode permissions
+    try {
+        $permissions = json_encode($permissions);
+    } catch(\Exception $e) {
+        $permissions = '[]';
     }
+
+    // set the permissions
+    $request->setStage('session_permissions', $permissions);
 
     //----------------------------//
     // 3. Process Request
@@ -271,8 +303,8 @@ $this->post('/dialog/request', function ($request, $response) {
 
     //redirect
     $url = $request->getStage('redirect_uri');
-    $code = $response->getResults('session_token');
-    $this->getDispatcher()->redirect($url . '?code=' . $code);
+    $token = $response->getResults('session_token');
+    $this->getDispatcher()->redirect($url . '?token=' . $token);
 });
 
 /**

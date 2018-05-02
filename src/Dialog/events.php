@@ -8,6 +8,20 @@
  */
 
 /**
+ * Creates a Session
+ *
+ * @param Request $request
+ * @param Response $response
+ */
+$this->on('session-create', function ($request, $response) {
+    //set session as schema
+    $request->setStage('schema', 'session');
+
+    //trigger model create
+    $this->trigger('system-model-create', $request, $response);
+});
+
+/**
  * Make a step to generate dialog pages
  *
  * @param Request $request
