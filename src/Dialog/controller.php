@@ -281,13 +281,12 @@ $this->post('/dialog/request', function ($request, $response) {
 
     // set the permissions
     $request->setStage('session_permissions', $permissions);
-    // set the code
-    $request->setStage('session_code', md5(uniqid() . uniqid()));
+    // set the access token
+    $request->setStage('session_token', md5(uniqid() . uniqid()));
 
     //----------------------------//
     // 3. Process Request
     $this->trigger('session-create', $request, $response);
-    $this->inspect($response);
 
     //----------------------------//
     // 4. Interpret Results
@@ -299,8 +298,8 @@ $this->post('/dialog/request', function ($request, $response) {
 
     //redirect
     $url = $request->getStage('redirect_uri');
-    $code = $response->getResults('session_code');
-    $this->getDispatcher()->redirect($url . '?code=' . $code);
+    $token = $response->getResults('session_token');
+    $this->getDispatcher()->redirect($url . '?access_token=' . $token);
 });
 
 /**

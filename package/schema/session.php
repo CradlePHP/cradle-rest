@@ -50,33 +50,6 @@ return array (
     ),
     2 => 
     array (
-      'label' => 'Code',
-      'name' => 'code',
-      'field' => 
-      array (
-        'type' => 'text',
-      ),
-      'validation' => 
-      array (
-        0 => 
-        array (
-          'method' => 'required',
-          'message' => 'Code is required',
-        ),
-      ),
-      'list' => 
-      array (
-        'format' => 'none',
-      ),
-      'detail' => 
-      array (
-        'format' => 'none',
-      ),
-      'default' => '',
-      'disable' => '1',
-    ),
-    3 => 
-    array (
       'label' => 'Permissions',
       'name' => 'permissions',
       'field' => 
@@ -94,7 +67,7 @@ return array (
       'default' => '',
       'disable' => '1',
     ),
-    4 => 
+    3 => 
     array (
       'label' => 'Status',
       'name' => 'status',
@@ -115,7 +88,7 @@ return array (
       'filterable' => '1',
       'disable' => '1',
     ),
-    5 => 
+    4 => 
     array (
       'label' => 'Type',
       'name' => 'type',
@@ -136,7 +109,7 @@ return array (
       'filterable' => '1',
       'disable' => '1',
     ),
-    6 => 
+    5 => 
     array (
       'label' => 'Active',
       'name' => 'active',
@@ -157,7 +130,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    7 => 
+    6 => 
     array (
       'label' => 'Created',
       'name' => 'created',
@@ -179,7 +152,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    8 => 
+    7 => 
     array (
       'label' => 'Updated',
       'name' => 'updated',
