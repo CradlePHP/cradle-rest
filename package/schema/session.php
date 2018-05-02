@@ -16,14 +16,6 @@ return array (
       array (
         'type' => 'text',
       ),
-      'validation' => 
-      array (
-        0 => 
-        array (
-          'method' => 'required',
-          'message' => 'Token is required',
-        ),
-      ),
       'list' => 
       array (
         'format' => 'none',
@@ -81,7 +73,7 @@ return array (
         'format' => 'none',
       ),
       'default' => '',
-      'disable' => '1'      
+      'disable' => '1',
     ),
     3 => 
     array (
@@ -109,14 +101,6 @@ return array (
       'field' => 
       array (
         'type' => 'text',
-      ),
-      'validation' => 
-      array (
-        0 => 
-        array (
-          'method' => 'required',
-          'message' => 'Status is required',
-        ),
       ),
       'list' => 
       array (

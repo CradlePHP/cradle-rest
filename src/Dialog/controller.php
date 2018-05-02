@@ -287,6 +287,7 @@ $this->post('/dialog/request', function ($request, $response) {
     //----------------------------//
     // 3. Process Request
     $this->trigger('session-create', $request, $response);
+    $this->inspect($response);
 
     //----------------------------//
     // 4. Interpret Results
