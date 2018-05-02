@@ -26,7 +26,7 @@ return array (
       ),
       'default' => '',
       'searchable' => '1',
-      'disable' => 1
+      'disable' => '1',
     ),
     1 => 
     array (
@@ -111,6 +111,24 @@ return array (
     ),
     5 => 
     array (
+      'label' => 'Expiry Date',
+      'name' => 'expiry_date',
+      'field' => 
+      array (
+        'type' => 'datetime',
+      ),
+      'list' => 
+      array (
+        'format' => 'none',
+      ),
+      'detail' => 
+      array (
+        'format' => 'none',
+      ),
+      'default' => '',
+    ),
+    6 => 
+    array (
       'label' => 'Active',
       'name' => 'active',
       'field' => 
@@ -130,7 +148,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    6 => 
+    7 => 
     array (
       'label' => 'Created',
       'name' => 'created',
@@ -152,7 +170,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    7 => 
+    8 => 
     array (
       'label' => 'Updated',
       'name' => 'updated',

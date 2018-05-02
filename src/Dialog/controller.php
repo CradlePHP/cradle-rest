@@ -310,6 +310,12 @@ $this->post('/dialog/oauth', function ($request, $response) {
     // set the permissions
     $request->setStage('session_permissions', $permissions);
 
+    // compute expiry, 3 hours expiry
+    $expiry = date('Y-m-d H:i:s', strtotime('+3 hours', time()));
+
+    // set the expiry date
+    $request->setStage('session_expiry_date', $expiry);
+
     // default redirect
     $redirect = null;
     // generate hash for token / code
