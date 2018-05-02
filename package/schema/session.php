@@ -44,14 +44,6 @@ return array (
       array (
         'type' => 'text',
       ),
-      'validation' => 
-      array (
-        0 => 
-        array (
-          'method' => 'required',
-          'message' => 'Secret is required',
-        ),
-      ),
       'list' => 
       array (
         'format' => 'none',
@@ -65,6 +57,33 @@ return array (
       'disable' => '1',
     ),
     2 => 
+    array (
+      'label' => 'Code',
+      'name' => 'code',
+      'field' => 
+      array (
+        'type' => 'text',
+      ),
+      'validation' => 
+      array (
+        0 => 
+        array (
+          'method' => 'required',
+          'message' => 'Code is required',
+        ),
+      ),
+      'list' => 
+      array (
+        'format' => 'none',
+      ),
+      'detail' => 
+      array (
+        'format' => 'none',
+      ),
+      'default' => '',
+      'disable' => '1'      
+    ),
+    3 => 
     array (
       'label' => 'Permissions',
       'name' => 'permissions',
@@ -83,7 +102,7 @@ return array (
       'default' => '',
       'disable' => '1',
     ),
-    3 => 
+    4 => 
     array (
       'label' => 'Status',
       'name' => 'status',
@@ -107,12 +126,12 @@ return array (
       array (
         'format' => 'none',
       ),
-      'default' => '',
+      'default' => 'PENDING',
       'searchable' => '1',
       'filterable' => '1',
       'disable' => '1',
     ),
-    4 => 
+    5 => 
     array (
       'label' => 'Type',
       'name' => 'type',
@@ -133,7 +152,7 @@ return array (
       'filterable' => '1',
       'disable' => '1',
     ),
-    5 => 
+    6 => 
     array (
       'label' => 'Active',
       'name' => 'active',
@@ -154,7 +173,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    6 => 
+    7 => 
     array (
       'label' => 'Created',
       'name' => 'created',
@@ -176,7 +195,7 @@ return array (
       'sortable' => '1',
       'disable' => '1',
     ),
-    7 => 
+    8 => 
     array (
       'label' => 'Updated',
       'name' => 'updated',
