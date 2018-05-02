@@ -81,7 +81,7 @@ return array (
         'format' => 'hide',
       ),
       'default' => '',
-      'disable' => '1'
+      'disable' => '1',
     ),
     3 => 
     array (
@@ -205,6 +205,11 @@ return array (
     array (
       'many' => '1',
       'name' => 'app',
+    ),
+    1 => 
+    array (
+      'many' => '1',
+      'name' => 'auth',
     ),
   ),
   'suggestion' => '',
