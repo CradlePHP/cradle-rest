@@ -7,6 +7,10 @@
  * distributed with this package.
  */
 
+use Cradle\Http\Request;
+use Cradle\Http\Response;
+use Cradle\Package\System\Model\Service;
+
 /**
  * Render the Signup Page
  *
@@ -59,74 +63,118 @@ $this->get('/dialog/request', function ($request, $response) {
 
     //validate parameters
     if (!$request->hasStage('client_id') || !$request->hasStage('redirect_uri')) {
+        $response->set('json', 'message', 'Invalid Parameters');
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
     //----------------------------//
     // 2. Prepare Data
-    //get app detail
+    // get the app token
     $token = $request->getStage('client_id');
-    $request->setStage('app_token', $token);
-    $this->trigger('app-detail', $request, $response);
+    
+    // app request
+    $appRequest = Request::i()->load();
+    // app response
+    $appResponse = Response::i()->load();
 
-    $app = $response->getResults();
-    $permitted = $app['app_permissions'];
+    // filter by app token
+    $appRequest->setStage('filter', 'app_token', $token);
+    // search the app by token
+    $this->trigger('app-search', $appRequest, $appResponse);
 
-    $requested = [];
-    if ($request->hasStage('scope')) {
-        $requested = explode(',', $request->getStage('scope'));
+    // get the app
+    $app = $appResponse->getResults('rows', 0);
+
+    // does app exists?
+    if (!$app) {
+        $response->set('json', 'message', 'Invalid Application');
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
-    //possible request types
-    $types = [
-        //public
-        'public_profile' => null,
-        'public_product' => null,
+    // get the app permissions
+    $appPermissions = $app['app_permissions'];
 
-        //personal
-        'personal_profile' => null,
-        'personal_comment' => null,
-        'personal_review' => null,
-        'personal_product' => null,
+    // empty app permissions?
+    if (empty($appPermissions)) {
+        $response->set('json', 'message', 'Invalid Permissions');
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    }
 
-        //user
-        'user_profile' => [
-            'title' => 'User Profile',
-            'description' => 'Access another user profile',
-            'icon' => 'user'
-        ],
-        'user_comment' => [
-            'title' => 'User Comments',
-            'description' => 'Access to another user published comments',
-            'icon' => 'comment'
-        ],
-        'user_review' => [
-            'title' => 'User Reviews',
-            'description' => 'Access to another user published reviews',
-            'icon' => 'comment'
-        ],
-        'user_product' => [
-            'title' => 'User Products',
-            'description' => 'Access to another user published products',
-            'icon' => 'tag'
-        ]
-    ];
+    // get the role ids
+    $roles = array_keys($appPermissions);
 
-    //the final permission set
-    $permissions = ['public_profile' => null, 'public_product' => null];
+    // get the roles
+    $roles = Service::get('sql')
+        ->getResource()
+        ->search('role')
+        ->addFilter('role_id IN %s', $roles)
+        ->getRows();
 
-    foreach ($requested as $permission) {
-        //if they dont have permissions to ask
-        if (!in_array($permission, $permitted)) {
-            return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    // if we don't have roles
+    if (!$roles) {
+        $response->set('json', 'message', 'Invalid Permissions');
+        return $this->routeTo('get', '/dialog/invalid', $request, $response);
+    }
+
+    // collect permissions
+    $permissions = [];
+
+    // get the role permissions
+    foreach($roles as $role) {
+        // get the permission
+        $permission = [];
+
+        // try to parse permissions
+        try {
+            // get the permissions
+            $permission = json_decode($role['role_permissions'], true);
+        } catch(\Exception $e) {
+            // set empty permissions
+            $permission = [];
         }
 
-        //if it's not a real permission
-        if (!isset($types[$permission])) {
-            continue;
-        }
+        // if we have permission
+        foreach($permission as $key => $value) {
+            // set the role id
+            $permission[$key]['role'] = $role['role_id'];
 
-        $permissions[$permission] = $types[$permission];
+            // figure out the icons?
+            // all methods?
+            if ($value['method'] == 'all') {
+                $permission[$key]['icon'] = 'fas fa-asterisk text-muted';
+
+            // detail?
+            } else if($value['method'] == 'get') {
+                $permission[$key]['icon'] = 'fas fa-eye text-muted';
+
+            // delete?
+            } else if($value['method'] == 'delete') {
+                $permission[$key]['icon'] = 'fas fa-trash text-muted';
+
+            // create or update?
+            } else if($value['method'] == 'post' || $value['method'] == 'put') {
+                $permission[$key]['icon'] = 'fas fa-pencil-alt text-muted';
+
+            // unknown?
+            } else {
+                $permission['icon'] = 'fas fa-question text-muted';
+            }
+
+            // set the permission
+            $permissions[$value['id']] = $permission[$key];
+        }
+    }
+
+    // flatten app permissions
+    $appPermissions = call_user_func_array('array_merge', $appPermissions);
+
+    // filter out permissions
+    foreach($permissions as $key => $value) {
+        // not in app permissions?
+        if (!in_array($key, $appPermissions)) {
+            // remove it
+            unset($permissions[$key]);
+        }
     }
 
     //set data
@@ -140,7 +188,7 @@ $this->get('/dialog/request', function ($request, $response) {
     $data['csrf'] = $response->getResults('csrf');
 
     if ($response->isError()) {
-        $response->setFlash($response->getMessage(), 'danger');
+        $response->setFlash($response->getMessage(), 'error');
         $data['errors'] = $response->getValidation();
     }
 
@@ -148,16 +196,17 @@ $this->get('/dialog/request', function ($request, $response) {
     // 3. Render Template
     $class = 'page-dialog-request';
     $title = $this->package('global')->translate('Request Access');
-    $body = cradle('/app/api')->template('dialog/request', $data);
+    $body = cradle('cradlephp/cradle-rest')->template('Dialog', 'request', $data);
 
-    //Set Content
+    // set content
     $response
-    ->setPage('title', $title)
-    ->setPage('class', $class)
-    ->setContent($body);
+        ->setPage('title', $title)
+        ->setPage('class', $class)
+        ->setContent($body);
 
-    //Render page
-}, 'render-dialog-page');
+    // render dialog page
+    $this->trigger('rest-render-dialog-page', $request, $response);
+});
 
 /**
  * Process the Request Page
@@ -236,7 +285,7 @@ $this->get('/dialog/logout', function ($request, $response) {
     //redirect
     //TODO: Find better way
     $query = http_build_query($request->get('get'));
-    $this->package('global')->redirect('/logout?'.$query);
+    $this->package('global')->redirect('/auth/logout?'.$query);
 });
 
 /**
@@ -261,13 +310,14 @@ $this->get('/dialog/invalid', function ($request, $response) {
     // 3. Render Template
     $class = 'page-dialog-invalid';
     $title = $this->package('global')->translate('Invalid Request');
-    $body = cradle('/app/api')->template('dialog/invalid', $data);
+    $body = cradle('cradlephp/cradle-rest')->template('Dialog', 'invalid', $data);
 
-    //set Content
+    // set content
     $response
-    ->setPage('title', $title)
-    ->setPage('class', $class)
-    ->setContent($body);
+        ->setPage('title', $title)
+        ->setPage('class', $class)
+        ->setContent($body);
 
-    //render page
-}, 'render-dialog-page');
+    // render dialog page
+    $this->trigger('rest-render-dialog-page', $request, $response);
+});

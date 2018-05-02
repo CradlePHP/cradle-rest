@@ -46,25 +46,6 @@ $this->get('/admin/app/create', function ($request, $response) {
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
 
-    // do we have roles?
-    if (is_array($data['roles'])) {
-        // on each roles
-        foreach($data['roles'] as $i => $role) {
-            // if we don't have permissions
-            if (!is_array($role['role_permissions'])) {
-                continue;
-            }
-
-            // on each permissions
-            foreach($role['role_permissions'] as $j => $permission) {
-                // create the key for later matching
-                $permission['key'] = strtoupper($permission['method']) . ':' . $permission['path'];
-                // update the permission
-                $data['roles'][$i]['role_permissions'][$j] = $permission;
-            } 
-        }
-    }
-
     //----------------------------//
     // 2. Render Template
     //Render body
@@ -187,25 +168,6 @@ $this->get('/admin/app/update/:app_id', function ($request, $response) {
 
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
-
-    // do we have roles?
-    if (is_array($data['roles'])) {
-        // on each roles
-        foreach($data['roles'] as $i => $role) {
-            // if we don't have permissions
-            if (!is_array($role['role_permissions'])) {
-                continue;
-            }
-
-            // on each permissions
-            foreach($role['role_permissions'] as $j => $permission) {
-                // create the key for later matching
-                $permission['key'] = strtoupper($permission['method']) . ':' . $permission['path'];
-                // update the permission
-                $data['roles'][$i]['role_permissions'][$j] = $permission;
-            } 
-        }
-    }
 
     //----------------------------//
     // 2. Render Template
@@ -492,6 +454,8 @@ $this->post('/admin/app/update/:app_id', function ($request, $response) {
                 json_encode($request->getStage('app_permissions'))
             );
         } catch(\Exception $e) {}
+    } else {
+        $request->setStage('app_permissions', '[]');
     }
 
     //----------------------------//
