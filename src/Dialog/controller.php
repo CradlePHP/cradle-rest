@@ -264,13 +264,6 @@ $this->post('/dialog/request', function ($request, $response) {
         return $this->routeTo('get', '/dialog/invalid', $request, $response);
     }
 
-    // generate session token
-    $request->setStage('session_token', md5(uniqid() . uniqid()));
-    // generate session secret
-    $request->setStage('session_secret', md5(uniqid() . uniqid()));
-    // session is pending by default
-    $request->setStage('session_status', 'PENDING');
-
     // link to the auth id
     $request->setStage('auth_id', $request->getSession('me', 'auth_id'));
     // link to the app id
@@ -288,6 +281,8 @@ $this->post('/dialog/request', function ($request, $response) {
 
     // set the permissions
     $request->setStage('session_permissions', $permissions);
+    // set the code
+    $request->setStage('session_code', md5(uniqid() . uniqid()));
 
     //----------------------------//
     // 3. Process Request
@@ -303,8 +298,8 @@ $this->post('/dialog/request', function ($request, $response) {
 
     //redirect
     $url = $request->getStage('redirect_uri');
-    $token = $response->getResults('session_token');
-    $this->getDispatcher()->redirect($url . '?token=' . $token);
+    $code = $response->getResults('session_code');
+    $this->getDispatcher()->redirect($url . '?code=' . $code);
 });
 
 /**
