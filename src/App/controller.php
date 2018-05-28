@@ -14,7 +14,7 @@ use Cradle\Package\System\Schema;
 
 /**
  * Render App Create Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -46,6 +46,13 @@ $this->get('/admin/app/create', function ($request, $response) {
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
 
+    foreach ($data['roles'] as $rkey => $role) {
+        foreach ($role['role_permissions'] as $key => $permission) {
+            $data['roles'][$rkey]['role_permissions'][$key]['id'] =
+                $permission['method'] . '-' . $permission['path'];
+        }
+    }
+
     //----------------------------//
     // 2. Render Template
     //Render body
@@ -74,7 +81,7 @@ $this->get('/admin/app/create', function ($request, $response) {
 
 /**
  * Render App Detail Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -123,7 +130,7 @@ $this->get('/admin/app/detail/:app_id', function ($request, $response) {
 
 /**
  * Render App Update Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -169,6 +176,13 @@ $this->get('/admin/app/update/:app_id', function ($request, $response) {
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
 
+    foreach ($data['roles'] as $rkey => $role) {
+        foreach ($role['role_permissions'] as $key => $permission) {
+            $data['roles'][$rkey]['role_permissions'][$key]['id'] =
+                $permission['method'] . '-' . $permission['path'];
+        }
+    }
+
     //----------------------------//
     // 2. Render Template
     //Render body
@@ -196,7 +210,7 @@ $this->get('/admin/app/update/:app_id', function ($request, $response) {
 
 /**
  * Render App Remove Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -238,7 +252,7 @@ $this->get('/admin/app/remove/:app_id', function ($request, $response) {
 
 /**
  * Render App Restore Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -280,7 +294,7 @@ $this->get('/admin/app/restore/:app_id', function ($request, $response) {
 
 /**
  * Render App Refresh Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -326,7 +340,7 @@ $this->get('/admin/app/refresh/:app_id', function ($request, $response) {
 
 /**
  * Render App Search Page
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -374,7 +388,7 @@ $this->get('/admin/app/search', function ($request, $response) {
 
 /**
  * Process App Create Request
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -399,7 +413,7 @@ $this->post('/admin/app/create', function ($request, $response) {
     if ($request->hasStage('app_permissions')) {
         try {
             $request->setStage(
-                'app_permissions', 
+                'app_permissions',
                 json_encode($request->getStage('app_permissions'))
             );
         } catch(\Exception $e) {}
@@ -433,7 +447,7 @@ $this->post('/admin/app/create', function ($request, $response) {
 
 /**
  * Process App Update Request
- * 
+ *
  * @param Request $request
  * @param Response $response
  */
@@ -450,7 +464,7 @@ $this->post('/admin/app/update/:app_id', function ($request, $response) {
     if ($request->hasStage('app_permissions')) {
         try {
             $request->setStage(
-                'app_permissions', 
+                'app_permissions',
                 json_encode($request->getStage('app_permissions'))
             );
         } catch(\Exception $e) {}
@@ -460,7 +474,7 @@ $this->post('/admin/app/update/:app_id', function ($request, $response) {
 
     //----------------------------//
     // 2. Process Request
-    $this->trigger('app-update', $request, $response);    
+    $this->trigger('app-update', $request, $response);
 
     //----------------------------//
     // 3. Interpret Results

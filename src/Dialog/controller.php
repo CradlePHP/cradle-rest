@@ -85,7 +85,7 @@ $this->get('/dialog/oauth', function ($request, $response) {
     // 2. Prepare Data
     // get the app token
     $token = $request->getStage('client_id');
-    
+
     // app request
     $appRequest = Request::i()->load();
     // app response
@@ -177,8 +177,9 @@ $this->get('/dialog/oauth', function ($request, $response) {
             }
 
             // set the permission
-            $permissions[$value['id']] = $permission[$key];
+            $permissions[$value['method'] . '-' . $value['path']] = $permission[$key];
         }
+
     }
 
     // flatten app permissions
@@ -349,7 +350,7 @@ $this->post('/dialog/oauth', function ($request, $response) {
         // set session type as code
         $request->setStage('session_type', 'code');
     }
-    
+
     //----------------------------//
     // 3. Process Request
     $this->trigger('session-create', $request, $response);
