@@ -18,7 +18,8 @@ use Cradle\Package\System\Schema;
 $this->post('/session/access', function ($request, $response) {
     //----------------------------//
     // 1. Route Permissions
-    $this->package('global')->requireLogin();
+    // no need for permission as we are
+    // requesting for access
     //----------------------------//
     // 2. Prepare Date
     //set the auth id
