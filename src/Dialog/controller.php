@@ -1,7 +1,7 @@
 <?php //-->
 /**
- * This file is part of a Custom Project.
- * (c) 2017-2019 Acme Inc.
+ * This file is part of a Cradle Rest Package.
+ * (c) 2018 Sterling Technologies.
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -177,9 +177,8 @@ $this->get('/dialog/oauth', function ($request, $response) {
             }
 
             // set the permission
-            $permissions[$value['method'] . '-' . $value['path']] = $permission[$key];
+            $permissions[$value['id']] = $permission[$key];
         }
-
     }
 
     // flatten app permissions

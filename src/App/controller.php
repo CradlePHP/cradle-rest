@@ -1,7 +1,7 @@
 <?php //-->
 /**
- * This file is part of a Custom Project.
- * (c) 2016-2018 Acme Products Inc.
+ * This file is part of a Cradle Rest Package.
+ * (c) 2018 Sterling Technologies.
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -45,13 +45,6 @@ $this->get('/admin/app/create', function ($request, $response) {
 
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
-
-    foreach ($data['roles'] as $rkey => $role) {
-        foreach ($role['role_permissions'] as $key => $permission) {
-            $data['roles'][$rkey]['role_permissions'][$key]['id'] =
-                $permission['method'] . '-' . $permission['path'];
-        }
-    }
 
     //----------------------------//
     // 2. Render Template
@@ -175,13 +168,6 @@ $this->get('/admin/app/update/:app_id', function ($request, $response) {
 
     // get the auth roles
     $data['roles'] = $roleResponse->getResults('rows');
-
-    foreach ($data['roles'] as $rkey => $role) {
-        foreach ($role['role_permissions'] as $key => $permission) {
-            $data['roles'][$rkey]['role_permissions'][$key]['id'] =
-                $permission['method'] . '-' . $permission['path'];
-        }
-    }
 
     //----------------------------//
     // 2. Render Template

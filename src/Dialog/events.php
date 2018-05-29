@@ -1,25 +1,11 @@
 <?php //-->
 /**
- * This file is part of a Custom Project.
- * (c) 2016-2018 Acme Products Inc.
+ * This file is part of a Cradle Rest Package.
+ * (c) 2018 Sterling Technologies.
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
  */
-
-/**
- * Creates a Session
- *
- * @param Request $request
- * @param Response $response
- */
-$this->on('session-create', function ($request, $response) {
-    //set session as schema
-    $request->setStage('schema', 'session');
-
-    //trigger model create
-    $this->trigger('system-model-create', $request, $response);
-});
 
 /**
  * Make a step to generate dialog pages

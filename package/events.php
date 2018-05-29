@@ -1,6 +1,6 @@
 <?php //-->
 /**
- * This file is part of a Custom Package.
+ * This file is part of a Cradle Rest Package.
  */
 
 use Cradle\Storm\SqlFactory;
@@ -206,7 +206,7 @@ $this->on('cradlephp-cradle-rest-elastic-flush', function ($request, $response) 
             // skip
             continue;
         }
-        
+
         // set parameters
         $request->setStage('name', $data['name']);
         // trigger global schema flush
@@ -218,10 +218,10 @@ $this->on('cradlephp-cradle-rest-elastic-flush', function ($request, $response) 
             continue;
         }
 
-        
+
         $processed[] = $data['name'];
     }
-    
+
     if (!empty($errors)) {
         $response->set('json', 'validation', $errors);
     }
@@ -254,12 +254,12 @@ $this->on('cradlephp-cradle-rest-elastic-map', function ($request, $response) {
             // skip
             continue;
         }
-        
+
         // set parameters
         $request->setStage('name', $data['name']);
         // trigger global schema flush
         $this->trigger('system-schema-map-elastic', $request, $response);
-        
+
         // intercept error
         if ($response->isError()) {
             //collect all the errors
@@ -274,7 +274,7 @@ $this->on('cradlephp-cradle-rest-elastic-map', function ($request, $response) {
     if (!empty ($errors)) {
         $response->set('json', 'validation', $errors);
     }
-    
+
     $response->setResults('schema', $processed);
 });
 
@@ -302,7 +302,7 @@ $this->on('cradlephp-cradle-rest-elastic-populate', function ($request, $respons
             // skip
             continue;
         }
-        
+
         // set parameters
         $request->setStage('name', $data['name']);
         // trigger global schema flush
@@ -314,14 +314,14 @@ $this->on('cradlephp-cradle-rest-elastic-populate', function ($request, $respons
         }
 
         $processed[] = $data['name'];
-        
+
     }
 
     // set response error
     if (!empty($errors)) {
         $response->set('json', 'validation', $errors);
     }
-    
+
     // set response
     $response->setResults('schema', 'profile');
 });
@@ -341,7 +341,7 @@ $this->on('cradlephp-cradle-rest-redis-flush', function ($request, $response) {
     // remove cached search and detail from redis
     $redis->removeSearch();
     $redis->removeDetail();
-    
+
     $response->setResults('schema', 'profile');
 });
 
@@ -378,11 +378,11 @@ $this->on('cradlephp-cradle-rest-redis-populate', function ($request, $response)
                 $redis->createDetail($slug . '-' . $entry[$slug], $entry);
             }
         }
-        
+
     }
 
     $response->setResults('schema', 'profile');
-    
+
 });
 
 /**

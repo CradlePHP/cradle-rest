@@ -1,7 +1,7 @@
 <?php //-->
 /**
- * This file is part of a Custom Project.
- * (c) 2016-2018 Acme Products Inc.
+ * This file is part of a Cradle Rest Package.
+ * (c) 2018 Sterling Technologies.
  *
  * Copyright and license information can be found at LICENSE.txt
  * distributed with this package.
@@ -16,7 +16,7 @@
 $this->get('/rest/:schema/search', function ($request, $response) {
     //----------------------------//
     // 1. Route Permissions
- 
+
     //----------------------------//
     // 2. Prepare Data
 
